@@ -26,7 +26,7 @@ public class Lex {
 
 			input = new BufferedReader(new FileReader(inputFile));
 			
-			File outputFile = new File("output.txt");
+			File outputFile = new File("output.csv");
 			
 			output = new BufferedWriter(new FileWriter(outputFile));
 			
