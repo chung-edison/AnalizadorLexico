@@ -3,25 +3,40 @@ package com.epn;
 import java.util.Arrays;
 
 public class LexEspec {
-
+	
+	//diccionario de palabras reservadas
 	private static final String[] reservadas = new String[] { "int", "float", "bool", "char", "string", "if", "then",
-			"else", "while", "do", "input", "output", "return" };
+			"else", "while", "do", "input", "output", "return" }; 
 
+	//diccionario de caracteres especiales
 	private static final String[] especiales = new String[] { ",", ";", ":", "(", ")", "[", "]", "{", "}", "+", "-",
 			"*", "/", "<", ">", "=", "!", "&", "$" };
 
+	//diccionario de operadores compuestos
 	private static final String[] compuestos = new String[] { "<=", ">=", "==", "!=", "&&", "||" };
 
+	private boolean error;  //bandera de error para determinar la linea donde ocurrio el error
+	
+	String n = System.getProperty("line.separator"); //obtiene el separador de linea del sistema
+	
+	public boolean hayError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
+	}
 
 	public String analyzeLine(String line){
+		String[] tokens = line.split("\\s+"); //separa el string en varios strings segun los espacios
 		String result = "";
-		char[] array = line.toCharArray();
-		
-		return result;	
+		for(String token : tokens){
+			result += token + "," + checkToken(token) + n; //formato de CSV
+		}
+		return result;
 	}
 	
 	public String checkToken(String token) {
-		String tokenClass = "ERROR";
 		if (Arrays.asList(reservadas).contains(token)) { // palabras reservadas
 			return "palabra reservada";
 		} else if (Arrays.asList(especiales).contains(token)) { // caracteres especiales
@@ -41,7 +56,8 @@ public class LexEspec {
 		} else if (token.matches("\"*\"")) { // string
 			return "string";
 		}
-		return tokenClass;
+		error = true;
+		return "errorlex";
 	}
 
 }

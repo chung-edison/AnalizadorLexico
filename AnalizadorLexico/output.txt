@@ -1,0 +1,5 @@
+esto,identificador
+x=4;,errorlex
+es,identificador
+una,identificador
+prueba,identificador

@@ -1,4 +1,4 @@
-esto
+esto x=4;
 es
 una
 prueba

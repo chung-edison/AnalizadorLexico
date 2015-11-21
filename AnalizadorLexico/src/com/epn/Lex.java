@@ -12,8 +12,12 @@ public class Lex {
 	private static int linea;
 
 	public static void main(String[] args) throws IOException {
+		
+		LexEspec comparador = new LexEspec();
 
 		BufferedReader input = null;
+		BufferedWriter output = null;
+		
 		linea = 0;
 
 		try {
@@ -21,13 +25,21 @@ public class Lex {
 			File inputFile = new File("input.txt");
 
 			input = new BufferedReader(new FileReader(inputFile));
-
+			
+			File outputFile = new File("output.txt");
+			
+			output = new BufferedWriter(new FileWriter(outputFile));
+			
 			while (input.ready()) {
-				System.out.println(input.readLine());
+				output.write(comparador.analyzeLine(input.readLine()));
 				linea++;
+				if(comparador.hayError()){
+					System.out.println("Error lexico en la linea " + linea);
+					comparador.setError(false);
+				}
 			}
 
-			System.out.println(linea);
+			System.out.println("Lineas analizadas: " + linea);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -35,23 +47,6 @@ public class Lex {
 			try {
 				if (input != null)
 					input.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-
-		BufferedWriter output = null;
-
-		try {
-
-			File outputFile = new File("output.txt");
-			output = new BufferedWriter(new FileWriter(outputFile));
-			output.newLine();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
 				if (output != null)
 					output.close();
 			} catch (IOException ex) {
