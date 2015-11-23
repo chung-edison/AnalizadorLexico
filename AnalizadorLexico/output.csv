@@ -1,5 +1,51 @@
-esto,identificador
-x=4;,errorlex
-es,identificador
-una,identificador
-prueba,identificador
+"Esto",errorlex
+"es",identificador
+"un",identificador
+"archivo",identificador
+"de",identificador
+"ejemplo",identificador
+"int",palabra reservada
+"x",identificador
+"=",caracter especial
+"4",int
+";",caracter especial
+"y",identificador
+"=",caracter especial
+"65",int
+";",caracter especial
+"5",int
+">=",operador compuesto
+"6",int
+"==",operador compuesto
+"34",int
+"!=",operador compuesto
+"4",int
+"input",palabra reservada
+"{",caracter especial
+"1.6",float
+"string",palabra reservada
+"}",caracter especial
+"String",errorlex
+""reconoce",errorlex
+"el",identificador
+"string?"",errorlex
+"output",palabra reservada
+"(",caracter especial
+"boolean",identificador
+"=",caracter especial
+"false",bool
+";",caracter especial
+")",caracter especial
+"Errores",errorlex
+":",caracter especial
+"@",errorlex
+"=<",errorlex
+"bool",palabra reservada
+"=",caracter especial
+"true",bool
+";",caracter especial
+"double",identificador
+"lineas",identificador
+"=",caracter especial
+"7",int
+";",caracter especial

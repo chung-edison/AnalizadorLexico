@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>input.txt</name>
+			<type>1</type>
+			<location>D:/workspace/AnalizadorLexico/input.txt</location>
+		</link>
+		<link>
+			<name>output.csv</name>
+			<type>1</type>
+			<location>D:/workspace/AnalizadorLexico/output.csv</location>
+		</link>
+	</linkedResources>
 </projectDescription>
