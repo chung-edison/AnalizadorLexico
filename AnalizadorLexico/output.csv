@@ -1,13 +1,5 @@
-"Esto",errorlex
-"es",identificador
-"un",identificador
-"archivo",identificador
-"de",identificador
-"ejemplo",identificador
 "int",palabra reservada
-"x",identificador
-"=",caracter especial
-"4",int
+""x = 4"",string
 ";",caracter especial
 "y",identificador
 "=",caracter especial
@@ -26,9 +18,7 @@
 "string",palabra reservada
 "}",caracter especial
 "String",errorlex
-""reconoce",errorlex
-"el",identificador
-"string?"",errorlex
+""reconoce el string?"",string
 "output",palabra reservada
 "(",caracter especial
 "boolean",identificador

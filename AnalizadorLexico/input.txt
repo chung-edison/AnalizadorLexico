@@ -1,5 +1,5 @@
-Esto es un archivo de ejemplo
-int x = 4 ; y=65; 5>= 6 ==34 != 4
+//Esto es un archivo de ejemplo
+int "x = 4" ; y=65; 5>= 6 ==34 != 4
 input {1.6 string}
 String "reconoce el string?"
 output (boolean = false;)
