@@ -1,4 +1,4 @@
-package com.epn;
+package analizadorLexico;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

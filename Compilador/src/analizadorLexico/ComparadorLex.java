@@ -1,4 +1,4 @@
-package com.epn;
+package analizadorLexico;
 
 public class ComparadorLex {
 	
