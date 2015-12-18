@@ -1,41 +1,10 @@
-"int",palabra reservada
-""x = 4"",string
-";",caracter especial
-"y",identificador
-"=",caracter especial
-"65",int
-";",caracter especial
-"5",int
-">=",operador compuesto
-"6",int
-"==",operador compuesto
-"34",int
-"!=",operador compuesto
-"4",int
-"input",palabra reservada
-"{",caracter especial
-"1.6",float
-"string",palabra reservada
-"}",caracter especial
-"String",errorlex
-""reconoce el string?"",string
-"output",palabra reservada
-"(",caracter especial
-"boolean",identificador
-"=",caracter especial
-"false",bool
-";",caracter especial
-")",caracter especial
-"Errores",errorlex
-":",caracter especial
-"@",errorlex
-"=<",errorlex
-"bool",palabra reservada
-"=",caracter especial
-"true",bool
-";",caracter especial
-"double",identificador
-"lineas",identificador
-"=",caracter especial
-"7",int
-";",caracter especial
+"bool",tipo
+":",:
+"x",ident
+"int",tipo
+":",:
+"asdf",ident
+"float",tipo
+":",:
+"tres",ident
+"",EOF

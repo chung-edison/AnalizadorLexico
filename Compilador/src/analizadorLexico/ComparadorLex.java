@@ -3,7 +3,9 @@ package analizadorLexico;
 public class ComparadorLex {
 	
 	//diccionario de palabras reservadas
-	private static final String reservadas = "int|float|bool|char|string|if|then|else|while|do|input|output|return"; 
+	private static final String tipos = "int|float|bool|char|string";
+			
+	private static final String reservadas = "if|then|else|while|do|input|output|return"; 
 
 	//diccionario de caracteres especiales
 	private static final String especiales = ",|;|:|\\(|\\)|\\[|\\]|\\{|\\}|\\+|-|\\*|/|<|>|=|!|&|\\$";
@@ -57,16 +59,20 @@ public class ComparadorLex {
 			return "string";
 		} else if (token.matches("\'.\'")) { // char
 			return "char";
+		} else if (token.matches(tipos)) { // palabras reservadas
+			return "tipo";
 		} else if (token.matches(reservadas)) { // palabras reservadas
-			return "palabra reservada";
+			return "reserv";
 		} else if (token.matches("(true|false)")) { // bool
 			return "bool";
 		} else if (token.matches(compuestos)) { // operadores compuestos
-			return "operador compuesto";
+			return "opcomp";
+		} else if (token.matches(":|;")) { // asignacion
+			return token;
 		} else if (token.matches(especiales)) { // caracteres especiales
-			return "caracter especial";
+			return "especial";
 		} else if (token.matches("[a-z]([0-9]|[a-z]|[A-Z]|_)*")) { // identificadores
-			return "identificador";
+			return "ident";
 		} else if (token.matches("(-)?[0-9]+(\\.)[0-9]+")) { // float
 			return "float";
 		} else if (token.matches("(-)?[0-9]+")) { // int

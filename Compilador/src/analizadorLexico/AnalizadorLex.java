@@ -38,6 +38,8 @@ public class AnalizadorLex {
 					comparador.setError(false);
 				}
 			}
+			
+			output.write("\"\",EOF");
 
 			System.out.println("Lineas analizadas: " + linea);
 
