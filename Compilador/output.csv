@@ -21,4 +21,13 @@
 "]",cd
 ";",;
 "EOL",EOL
+"esto",ident
+":",:
+"es",ident
+"un",ident
+"[",ci
+"error",ident
+"]",cd
+";",;
+"EOL",EOL
 "",EOF

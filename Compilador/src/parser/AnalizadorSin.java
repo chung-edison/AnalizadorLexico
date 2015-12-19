@@ -37,7 +37,8 @@ public class AnalizadorSin {
 					linea++;
 				}
 				
-				arbol = parser.shift(new Nodo(tokens[0].substring(1), tokens[1]));
+				Nodo sig = new Nodo(tokens[0].substring(1), tokens[1]);
+				arbol = parser.shift(sig);
 				
 				if(arbol.getInfo() != null){
 					if(arbol.getInfo().equals("#VARGLOBAL")){

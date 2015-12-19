@@ -69,6 +69,7 @@ public class Parser {
 		if(nuevo.getInfo().matches(";|EOF") && exp.getInfo() == null && cola.size() > 1){
 			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error");
 			cola.clear();
+			if(stackpos > 0) stackpos--;
 		}
 		return exp;
 	}
@@ -84,6 +85,13 @@ public class Parser {
 			acomparar += nodo.getInfo() + " ";
 		}
 		
+		expresion = check(acomparar + cola.get(i).getInfo() + " ");
+		
+		if(expresion.matches("#.*")) {
+			Nodo padre = new Nodo(null, expresion);	
+			return padre;
+		}
+		
 		expresion = check(acomparar);
 		
 		if(expresion.matches("sub")){
@@ -91,15 +99,6 @@ public class Parser {
 			aux.add(cola.get(cola.size() - 1));		
 			cola.remove(cola.size() - 1);
 			return new Nodo(null,null);
-		}
-		
-		acomparar += cola.get(i).getInfo() + " ";
-
-		expresion = check(acomparar);
-		
-		if(expresion.matches("#.*")) {
-			Nodo padre = new Nodo(null, expresion);	
-			return padre;
 		}
 		
 		return new Nodo(null,null);
@@ -112,7 +111,7 @@ public class Parser {
 				expresion = produccion;
 			if(toReduce.trim().equals(produccion))
 				return expresion;
-			if(produccion.matches(toReduce + "#.*"))
+			if(produccion.matches(toReduce.trim() + " #.*"))
 				return "sub";
 		}
 		return "";
