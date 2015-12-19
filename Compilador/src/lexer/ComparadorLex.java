@@ -1,4 +1,4 @@
-package analizadorLexico;
+package lexer;
 
 public class ComparadorLex {
 	
@@ -8,12 +8,14 @@ public class ComparadorLex {
 	private static final String reservadas = "if|then|else|while|do|input|output|return"; 
 
 	//diccionario de caracteres especiales
-	private static final String especiales = ",|;|:|\\(|\\)|\\[|\\]|\\{|\\}|\\+|-|\\*|/|<|>|=|!|&|\\$";
+	private static final String especiales = ",|;|:|=|!|&|\\$";
+	
+	private static final String signos = "\\+|-|\\*|/|<|>";
 
 	//diccionario de operadores compuestos
-	private static final String compuestos = "<=|>=|==|!=|&&|\\|\\|";
+	private static final String opcomp = "<=|>=|==|!=|&&|\\|\\|";
 	
-	private static final String nosignos = ",|;|:|\\(|\\)|\\[|\\]|\\{|\\}|/|\\$";
+	private static final String nosignos = ",|;|:|\\$";
 	
 	private static final String texto = "(?:\".*\")|([0-9]|[a-z]|[A-Z]|_)+";
 	
@@ -51,9 +53,10 @@ public class ComparadorLex {
 		for(String token : tokens){
 			result += "\"" + token + "\"" + "," + tokenClass(token) + n; //formato de CSV
 		}
+		result += "\"EOL\",EOL" + n;
 		return result;
 	}
-	
+
 	public String tokenClass(String token) {
 		if (token.matches("\".*\"")) { // string
 			return "string";
@@ -65,12 +68,24 @@ public class ComparadorLex {
 			return "reserv";
 		} else if (token.matches("(true|false)")) { // bool
 			return "bool";
-		} else if (token.matches(compuestos)) { // operadores compuestos
+		} else if (token.matches(opcomp)) { // operadores compuestos
 			return "opcomp";
-		} else if (token.matches(":|;")) { // asignacion
-			return token;
+		} else if (token.matches(signos)) { // operadores simples
+			return "signo";
 		} else if (token.matches(especiales)) { // caracteres especiales
-			return "especial";
+			return token;	
+		} else if (token.matches("\\(")) { // caracteres especiales
+			return "pi";	
+		} else if (token.matches("\\)")) { // caracteres especiales
+			return "pd";	
+		} else if (token.matches("\\[")) { // caracteres especiales
+			return "ci";	
+		} else if (token.matches("\\]")) { // caracteres especiales
+			return "cd";	
+		} else if (token.matches("\\{")) { // caracteres especiales
+			return "li";	
+		} else if (token.matches("\\}")) { // caracteres especiales
+			return "ld";	
 		} else if (token.matches("[a-z]([0-9]|[a-z]|[A-Z]|_)*")) { // identificadores
 			return "ident";
 		} else if (token.matches("(-)?[0-9]+(\\.)[0-9]+")) { // float

@@ -1,4 +1,4 @@
-package analizadorLexico;
+package lexer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +11,7 @@ public class AnalizadorLex {
 
 	private static int linea;
 
-	public static void main(String[] args) throws IOException {
+	public void lex() {
 
 		ComparadorLex comparador = new ComparadorLex();
 

@@ -1,3 +1,4 @@
-bool : x
-int : asdf
-float : tres
+bool : x;
+int : asdf;
+float : tres;
+float:fue[32];

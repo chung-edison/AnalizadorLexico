@@ -1,2 +1,5 @@
 #VARGLOBAL
-tipo : ident
+tipo : ident ;
+tipo : ident #VECT ;
+#VECT
+ci int cd
