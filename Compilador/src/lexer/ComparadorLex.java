@@ -8,14 +8,14 @@ public class ComparadorLex {
 	private static final String reservadas = "if|then|else|while|do|input|output|return"; 
 
 	//diccionario de caracteres especiales
-	private static final String especiales = ",|;|:|=|!|&|\\$";
+	private static final String especiales = ",|;|:|!|&|\\$|=";
 	
 	private static final String signos = "\\+|-|\\*|/|<|>";
 
 	//diccionario de operadores compuestos
 	private static final String opcomp = "<=|>=|==|!=|&&|\\|\\|";
 	
-	private static final String nosignos = ",|;|:|\\$";
+	private static final String nosignos = ",|;|:|\\$|\\(|\\)|\\{|\\}|\\[|\\]";
 	
 	private static final String texto = "(?:\".*\")|([0-9]|[a-z]|[A-Z]|_)+";
 	

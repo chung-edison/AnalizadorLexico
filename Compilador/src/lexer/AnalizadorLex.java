@@ -41,8 +41,6 @@ public class AnalizadorLex {
 			
 			output.write("\"\",EOF");
 
-			System.out.println("Lineas analizadas: " + linea);
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

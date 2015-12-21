@@ -1,5 +1,35 @@
 #VARGLOBAL
-tipo : ident ;
-tipo : ident #VECT ;
+ tipo : ident
+ #VARGLOBAL #VECT
 #VECT
-ci int cd
+ ci int cd
+#ARIT
+ #VAR signo #VAR
+ #VAR signo #ARIT
+ #VAR signo ident
+ ident signo ident
+ ident signo #ARIT
+ ident signo #VAR
+ pi #ARIT pd
+ pi #VAR signo #PDARIT
+ pi ident signo #PDARIT
+ pi #ARIT signo #PDARIT
+#PDARIT
+ #VAR pd signo #VAR
+ #ARIT pd signo #ARIT
+#VAR
+ int
+ float
+ pi #VAR pd
+#COM
+ ident #EXPR
+ input
+ output
+ return
+#EXPR
+ = #VAR
+ = ident
+ = #ARIT
+ #VECT = #VAR
+ #VECT = ident
+ #VECT = #ARIT

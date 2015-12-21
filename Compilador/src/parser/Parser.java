@@ -11,6 +11,7 @@ public class Parser {
 	private static ArrayList<ArrayList<Nodo>> stack;
 	private static String[] handles;
 	private static int stackpos;
+	private static boolean panico;
 		
 	public Parser() {
 		super();
@@ -19,6 +20,7 @@ public class Parser {
 		ArrayList<Nodo> cola = new ArrayList<Nodo>();
 		stack.add(cola);
 		stackpos = 0;
+		panico = false;
 		
 		BufferedReader input = null;
 
@@ -48,8 +50,21 @@ public class Parser {
 	
 	public Nodo shift(Nodo nuevo){
 
-		if(nuevo.getDato().matches("EOL"))
+		if(nuevo.getInfo().matches("EOL"))
 			return new Nodo(null,null);
+		
+		if(nuevo.getInfo().matches("errorlex")){
+			nuevo.setInfo("error");
+			panico = true;
+			return nuevo;
+		}
+		
+		if(panico) return new Nodo(null,null);
+			
+		if(panico && nuevo.getInfo().matches(";")){
+			panico = false;
+			return new Nodo(null, null);
+		}
 		
 		ArrayList<Nodo> cola = stack.get(stackpos);
 		cola.add(nuevo);
@@ -60,16 +75,30 @@ public class Parser {
 				nodo.setPadre(exp);
 				exp.addHijo(nodo);
 			}
-			cola.clear();
-			if(stackpos > 0){
-				stackpos--;
-				exp = shift(exp);
-			}
+			stack.get(stackpos).clear();
+			exp = shift(exp);
 		}
-		if(nuevo.getInfo().matches(";|EOF") && exp.getInfo() == null && cola.size() > 1){
+		if(nuevo.getInfo().matches(";|EOF")){
+			if(stackpos > 0) {
+				stackpos--;
+				try{
+					while(!cola.isEmpty())
+						exp = shift(cola.remove(0));
+					stack.remove(stackpos + 1);
+				}catch (StackOverflowError|IndexOutOfBoundsException e){
+					stack.clear();
+					stack.add(new ArrayList<Nodo>());
+					stackpos = 0;
+					return new Nodo(nuevo.getDato(), "error");
+				}
+			} 
+			if(!cola.isEmpty())
+				if(stackpos == 0 && cola.size() < 3 && cola.get(0).getInfo().matches("#.*")) 
+					stack.get(0).clear();
+		}
+		if((nuevo.getInfo().matches(";") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3)){
 			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error");
 			cola.clear();
-			if(stackpos > 0) stackpos--;
 		}
 		return exp;
 	}
@@ -82,23 +111,26 @@ public class Parser {
 		
 		for(i = 0; i < cola.size() - 1; i++){
 			nodo = cola.get(i);
-			acomparar += nodo.getInfo() + " ";
+			acomparar += " " + nodo.getInfo();
 		}
 		
-		expresion = check(acomparar + cola.get(i).getInfo() + " ");
+		expresion = check(acomparar + " " + cola.get(i).getInfo());
+		
+		if(expresion == "sub") return new Nodo(null,null);
 		
 		if(expresion.matches("#.*")) {
 			Nodo padre = new Nodo(null, expresion);	
 			return padre;
 		}
 		
-		expresion = check(acomparar);
+		if(!cola.get(i).getInfo().matches("#.*"))
+			expresion = check(acomparar);
 		
-		if(expresion.matches("sub")){
+		if(expresion.matches("sub")&&(!cola.get(i).getInfo().matches(";"))){
 			ArrayList<Nodo> aux = new ArrayList<Nodo>();
-			aux.add(cola.get(cola.size() - 1));		
-			cola.remove(cola.size() - 1);
-			return new Nodo(null,null);
+			stack.add(aux);
+			stackpos++;
+			return shift(cola.remove(cola.size() - 1));		
 		}
 		
 		return new Nodo(null,null);
@@ -109,9 +141,9 @@ public class Parser {
 		for(String produccion:handles){
 			if(produccion.matches("#.*"))
 				expresion = produccion;
-			if(toReduce.trim().equals(produccion))
+			if(toReduce.equals(produccion))
 				return expresion;
-			if(produccion.matches(toReduce.trim() + " #.*"))
+			if(toReduce != "" && produccion.matches(toReduce + " #.*"))
 				return "sub";
 		}
 		return "";
