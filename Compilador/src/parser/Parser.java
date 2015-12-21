@@ -12,6 +12,7 @@ public class Parser {
 	private static String[] handles;
 	private static int stackpos;
 	private static boolean panico;
+	private static int llave;
 		
 	public Parser() {
 		super();
@@ -21,6 +22,7 @@ public class Parser {
 		stack.add(cola);
 		stackpos = 0;
 		panico = false;
+		llave = 0;
 		
 		BufferedReader input = null;
 
@@ -66,6 +68,7 @@ public class Parser {
 			return new Nodo(null, null);
 		}
 		
+		
 		ArrayList<Nodo> cola = stack.get(stackpos);
 		cola.add(nuevo);
 		
@@ -79,27 +82,36 @@ public class Parser {
 			exp = shift(exp);
 		}
 		try{
-			if(nuevo.getInfo().matches(";|EOF")){
-				if(stackpos > 0) {
+			if(nuevo.getInfo().matches(";|EOF|ld")){
+				if(stackpos > 0 && llave == 0) {
 					stackpos--;
-						ArrayList<Nodo> colaaux = cola;
-						stack.remove(stackpos + 1);
-						while(!colaaux.isEmpty())
-							exp = shift(cola.remove(0));
+					ArrayList<Nodo> colaaux = cola;
+					stack.remove(stackpos + 1);
+					while(!colaaux.isEmpty())
+						exp = shift(cola.remove(0));
 				} 
 				if(!cola.isEmpty())
-					if(stackpos == 0 && stack.get(0).size() < 3 && stack.get(0).get(0).getInfo().matches("#.*")) 
+					if(llave == 0 && stackpos == 0 && stack.get(0).size() < 3 && stack.get(0).get(0).getInfo().matches("#.*")) 
 						stack.get(0).clear();
-		}
+			}
 		}catch (StackOverflowError|IndexOutOfBoundsException e){
 			stack.clear();
 			stack.add(new ArrayList<Nodo>());
 			stackpos = 0;
 			return new Nodo(nuevo.getDato(), "error");
 		}
-		if(((nuevo.getInfo().matches(";") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3))&&exp.getInfo()==null){
+		if(llave > 1 && cola.size() == 1){
+			cola.clear();
+		}
+		if(nuevo.getInfo().matches("ld")) llave--;
+		if(llave == 0 && ((nuevo.getInfo().matches(";") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3))&&exp.getInfo()==null){
 			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error");
 			cola.clear();
+		}
+		if(nuevo.getInfo().matches("li")){
+			stackpos++;
+			stack.add(new ArrayList<Nodo>());
+			llave++;
 		}
 		return exp;
 	}

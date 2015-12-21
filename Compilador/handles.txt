@@ -38,6 +38,10 @@
  return
 #BLOQ
  li #COM ; ld
+ li #COMREC ld
+#COMREC
+ #COM ; #COM ;
+ #COMREC #COM ;
 #EXPR
  = #VAR
  = ident
