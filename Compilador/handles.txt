@@ -17,6 +17,16 @@
 #PDARIT
  #VAR pd signo #VAR
  #ARIT pd signo #ARIT
+#LOGIC
+ #VAR opcomp #VAR
+ #VAR opcomp #ARIT
+ #VAR opcomp ident
+ ident opcomp ident
+ ident opcomp #ARIT
+ ident opcomp #VAR
+ #ARIT opcomp #VAR
+ #ARIT opcomp #ARIT
+ #ARIT opcomp ident
 #VAR
  int
  float
@@ -26,10 +36,21 @@
  input
  output
  return
+#BLOQ
+ li #COM ; ld
 #EXPR
  = #VAR
  = ident
  = #ARIT
+ = #LOGIC
  #VECT = #VAR
  #VECT = ident
  #VECT = #ARIT
+ #VECT = #LOGIC
+#IF
+ if pi #LOGIC pd then #BLOQ
+ #IF else #BLOQ
+#WHILE
+ while pi #LOGIC pd do #BLOQ
+#DO
+ do #BLOQ while #LOGIC

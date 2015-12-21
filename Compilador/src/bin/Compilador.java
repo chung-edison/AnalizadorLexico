@@ -13,6 +13,8 @@ public class Compilador {
 		lexer.lex();
 		parser.parse();		
 		//typecheck.typeCheck();		
+		
+		System.out.println("Compilación completa");
 
 	}
 }

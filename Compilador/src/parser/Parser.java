@@ -78,25 +78,26 @@ public class Parser {
 			stack.get(stackpos).clear();
 			exp = shift(exp);
 		}
-		if(nuevo.getInfo().matches(";|EOF")){
-			if(stackpos > 0) {
-				stackpos--;
-				try{
-					while(!cola.isEmpty())
-						exp = shift(cola.remove(0));
-					stack.remove(stackpos + 1);
-				}catch (StackOverflowError|IndexOutOfBoundsException e){
-					stack.clear();
-					stack.add(new ArrayList<Nodo>());
-					stackpos = 0;
-					return new Nodo(nuevo.getDato(), "error");
-				}
-			} 
-			if(!cola.isEmpty())
-				if(stackpos == 0 && cola.size() < 3 && cola.get(0).getInfo().matches("#.*")) 
-					stack.get(0).clear();
+		try{
+			if(nuevo.getInfo().matches(";|EOF")){
+				if(stackpos > 0) {
+					stackpos--;
+						ArrayList<Nodo> colaaux = cola;
+						stack.remove(stackpos + 1);
+						while(!colaaux.isEmpty())
+							exp = shift(cola.remove(0));
+				} 
+				if(!cola.isEmpty())
+					if(stackpos == 0 && stack.get(0).size() < 3 && stack.get(0).get(0).getInfo().matches("#.*")) 
+						stack.get(0).clear();
 		}
-		if((nuevo.getInfo().matches(";") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3)){
+		}catch (StackOverflowError|IndexOutOfBoundsException e){
+			stack.clear();
+			stack.add(new ArrayList<Nodo>());
+			stackpos = 0;
+			return new Nodo(nuevo.getDato(), "error");
+		}
+		if(((nuevo.getInfo().matches(";") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3))&&exp.getInfo()==null){
 			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error");
 			cola.clear();
 		}

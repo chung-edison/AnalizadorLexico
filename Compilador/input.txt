@@ -1,2 +1,8 @@
-a[3] = fa ;
-a[3] = fa *50;
+bool : x;
+int : asdf;
+float : tres;
+float:fue[32];
+esto : es un [error];
+string : no ;
+esto tambien es un error;
+{char= asdf ;}

@@ -10,10 +10,10 @@ public class ComparadorLex {
 	//diccionario de caracteres especiales
 	private static final String especiales = ",|;|:|!|&|\\$|=";
 	
-	private static final String signos = "\\+|-|\\*|/|<|>";
+	private static final String signos = "\\+|-|\\*|/";
 
 	//diccionario de operadores compuestos
-	private static final String opcomp = "<=|>=|==|!=|&&|\\|\\|";
+	private static final String opcomp = "<|>|<=|>=|==|!=|&&|\\|\\|";
 	
 	private static final String nosignos = ",|;|:|\\$|\\(|\\)|\\{|\\}|\\[|\\]";
 	
@@ -38,9 +38,9 @@ public class ComparadorLex {
 	public String analizarLinea(String line){
 		if(line.matches(".*\\*/")) {
 			comment = false;
-			return "";
+			return "\"EOL\",EOL" + n;
 		}
-		if(line.matches("//.*")||comment) return "";
+		if(line.matches("//.*")||comment) return "\"EOL\",EOL" + n;
 		if(line.matches("/\\*.*")) comment = true;
 		line = line.replaceAll(numeros + "|" + texto + "|" + nosignos, " $0 ").trim(); 
 			//agrega espacios antes de cada id y num, es decir, identifica tokens y separa
@@ -65,7 +65,7 @@ public class ComparadorLex {
 		} else if (token.matches(tipos)) { // palabras reservadas
 			return "tipo";
 		} else if (token.matches(reservadas)) { // palabras reservadas
-			return "reserv";
+			return token;
 		} else if (token.matches("(true|false)")) { // bool
 			return "bool";
 		} else if (token.matches(opcomp)) { // operadores compuestos
