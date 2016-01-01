@@ -1,10 +1,3 @@
-bool : x;
-int : asdf;
-float : tres;
-float:fue[32];
-esto : es un [error];
-string : no ;
-esto tambien es un error;
-{asdf= asdf ; super = a * 98;}
+while(a == b) do
 {asdf= asdf ; super = a * 98;
 asdf= asdf ; super = a * 98;}

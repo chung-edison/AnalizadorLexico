@@ -54,10 +54,15 @@ public class Nodo {
 		return hijos.isEmpty();
 	}
 	
-	public void mostrar(){
-		System.out.print("\n" + this.info + "\n");
-		for(Nodo nodo:hijos)
-			System.out.print(nodo.getInfo() + " ");
+	public String mostrar(){
+		String salida = this.info;
+		if (!hijos.isEmpty()) {
+			salida += " ( ";
+			for (Nodo nodo : hijos)
+				salida += nodo.mostrar() + " ";
+			salida += ") ";
+		}
+		return salida;
 	}
 
 }

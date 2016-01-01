@@ -63,7 +63,7 @@ public class Parser {
 		
 		if(panico) return new Nodo(null,null);
 			
-		if(panico && nuevo.getInfo().matches(";")){
+		if(panico && nuevo.getInfo().matches(";|ld")){
 			panico = false;
 			return new Nodo(null, null);
 		}
@@ -79,20 +79,24 @@ public class Parser {
 				exp.addHijo(nodo);
 			}
 			stack.get(stackpos).clear();
+			if(exp.getInfo().matches("#LICOM"))
+				nuevo.setInfo("");
 			exp = shift(exp);
 		}
 		try{
 			if(nuevo.getInfo().matches(";|EOF|ld")){
-				if(stackpos > 0 && llave == 0) {
+				if(stackpos > 0) {
 					stackpos--;
 					ArrayList<Nodo> colaaux = cola;
 					stack.remove(stackpos + 1);
 					while(!colaaux.isEmpty())
-						exp = shift(cola.remove(0));
+						exp = shift(colaaux.remove(0));
 				} 
 				if(!cola.isEmpty())
-					if(llave == 0 && stackpos == 0 && stack.get(0).size() < 3 && stack.get(0).get(0).getInfo().matches("#.*")) 
+					if(stackpos == 0 && stack.get(0).size() < 3 && stack.get(0).get(0).getInfo().matches("#(?!LICOM).*")) {
+						exp = stack.get(0).get(0);
 						stack.get(0).clear();
+					}
 			}
 		}catch (StackOverflowError|IndexOutOfBoundsException e){
 			stack.clear();
@@ -100,18 +104,9 @@ public class Parser {
 			stackpos = 0;
 			return new Nodo(nuevo.getDato(), "error");
 		}
-		if(llave > 1 && cola.size() == 1){
-			cola.clear();
-		}
-		if(nuevo.getInfo().matches("ld")) llave--;
-		if(llave == 0 && ((nuevo.getInfo().matches(";") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3))&&exp.getInfo()==null){
+		if(((nuevo.getInfo().matches(";|ld") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3))&&exp.getInfo()==null){
 			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error");
 			cola.clear();
-		}
-		if(nuevo.getInfo().matches("li")){
-			stackpos++;
-			stack.add(new ArrayList<Nodo>());
-			llave++;
 		}
 		return exp;
 	}

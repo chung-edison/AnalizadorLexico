@@ -1,6 +1,7 @@
-#VARGLOBAL
+#VARLOCAL
  tipo : ident
- #VARGLOBAL #VECT
+#VARGLOBAL
+ #VARLOCAL #VECT
 #VECT
  ci int cd
 #ARIT
@@ -37,11 +38,10 @@
  output
  return
 #BLOQ
- li #COM ; ld
- li #COMREC ld
-#COMREC
- #COM ; #COM ;
- #COMREC #COM ;
+ #LICOM ld
+#LICOM
+ li #COM ;
+ #LICOM #COM ;
 #EXPR
  = #VAR
  = ident
@@ -51,10 +51,24 @@
  #VECT = ident
  #VECT = #ARIT
  #VECT = #LOGIC
+ #EXPR signo #VAR
+ #EXPR signo ident
+ #EXPR signo #ARIT
 #IF
+ if pi #LOGIC pd then #COM
+ #IF else #COM
  if pi #LOGIC pd then #BLOQ
  #IF else #BLOQ
 #WHILE
  while pi #LOGIC pd do #BLOQ
+ while pi #LOGIC pd do #COM
 #DO
- do #BLOQ while #LOGIC
+ do #BLOQ while pi #LOGIC pd
+#FUNC
+ #VARLOCAL #LISTA #BLOQ
+#LISTA
+ pi pd
+ #PILIST pd
+#PILIST
+ pi #VARLOCAL
+ #PILIST , #VARLOCAL

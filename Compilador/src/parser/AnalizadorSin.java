@@ -31,7 +31,7 @@ public class AnalizadorSin {
 			Nodo arbol;
 
 			while (input.ready()) {
-				String tokens[] = input.readLine().split("\",");
+				String tokens[] = input.readLine().split("\",(?!\")");
 				
 				if(tokens[1].matches("EOL")){
 					linea++;
@@ -41,6 +41,7 @@ public class AnalizadorSin {
 				arbol = parser.shift(sig);
 				
 				if(arbol.getInfo() != null){
+					//System.out.println(arbol.mostrar());
 					if(arbol.getInfo().equals("#VARGLOBAL")){
 						Nodo aux = arbol.getHijos().get(2);
 						output.write(aux.getDato() + ",");
