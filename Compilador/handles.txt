@@ -15,6 +15,7 @@
  pi #VAR signo #PDARIT
  pi ident signo #PDARIT
  pi #ARIT signo #PDARIT
+ pi #PDARIT
 #PDARIT
  #VAR pd signo #VAR
  #ARIT pd signo #ARIT
@@ -37,6 +38,9 @@
  input
  output
  return
+ #IF
+ #WHILE
+ #DO
 #BLOQ
  #LICOM ld
 #LICOM
@@ -65,10 +69,15 @@
 #DO
  do #BLOQ while pi #LOGIC pd
 #FUNC
- #VARLOCAL #LISTA #BLOQ
-#LISTA
- pi pd
- #PILIST pd
-#PILIST
- pi #VARLOCAL
- #PILIST , #VARLOCAL
+ #VARLOCAL pi #PARAM #LOCAL #BLOQ
+#PARAM
+ #VARLOCAL pd
+ #PARAMCOMA #PARAM
+#PARAMCOMA
+ #VARLOCAL ,
+ #PARAMCOMA #PARAMCOMA
+#LOCAL
+ #LIVAR ld
+#LIVAR
+ li #VARLOCAL ;
+ #LIVAR #VARLOCAL ;

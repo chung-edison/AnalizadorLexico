@@ -79,7 +79,7 @@ public class Parser {
 				exp.addHijo(nodo);
 			}
 			stack.get(stackpos).clear();
-			if(exp.getInfo().matches("#LICOM"))
+			if(exp.getInfo().matches("#LICOM|#LIVAR"))
 				nuevo.setInfo("");
 			exp = shift(exp);
 		}

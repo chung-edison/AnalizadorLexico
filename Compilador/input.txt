@@ -1,3 +1,5 @@
-while(a == b) do
+int : funcion(bool : asd)
+{int : a; int:b;}
 {asdf= asdf ; super = a * 98;
-asdf= asdf ; super = a * 98;}
+asdf= asdf ; super = a * 98;
+if(a == b) then a = b;}
