@@ -6,14 +6,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AnalizadorSin {
 
 	private int linea = 1;
+	private ArrayList<Nodo> arboles;
+
+	public ArrayList<Nodo> getArboles() {
+		return arboles;
+	}
 
 	public void parse() {
 
 		Parser parser = new Parser();
+		arboles = new ArrayList<Nodo>();
 		
 		BufferedReader input = null;
 		BufferedWriter output = null;
@@ -41,13 +48,16 @@ public class AnalizadorSin {
 				arbol = parser.shift(sig);
 				
 				if(arbol.getInfo() != null){
-					//System.out.println(arbol.mostrar());
 					if(arbol.getInfo().equals("#VARGLOBAL")){
 						Nodo aux = arbol.getHijos().get(2);
 						output.write(aux.getDato() + ",");
 						aux = arbol.getHijos().get(0);
 						output.write(aux.getDato());
 						output.newLine();
+					}
+					
+					if(arbol.getInfo().matches("#VARLOCAL|#VARGLOBAL|#COM|#BLOQ|#FUNC")){
+						arboles.add(arbol);
 					}
 					
 					if(arbol.getInfo().equals("error")){

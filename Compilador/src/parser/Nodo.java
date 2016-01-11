@@ -57,10 +57,10 @@ public class Nodo {
 	public String mostrar(){
 		String salida = this.info;
 		if (!hijos.isEmpty()) {
-			salida += " ( ";
+			salida += "(";
 			for (Nodo nodo : hijos)
 				salida += nodo.mostrar() + " ";
-			salida += ") ";
+			salida = salida.trim() + ")";
 		}
 		return salida;
 	}

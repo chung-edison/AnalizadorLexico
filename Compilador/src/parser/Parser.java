@@ -12,8 +12,7 @@ public class Parser {
 	private static String[] handles;
 	private static int stackpos;
 	private static boolean panico;
-	private static int llave;
-		
+	
 	public Parser() {
 		super();
 		
@@ -22,8 +21,6 @@ public class Parser {
 		stack.add(cola);
 		stackpos = 0;
 		panico = false;
-		llave = 0;
-		
 		BufferedReader input = null;
 
 		try {
