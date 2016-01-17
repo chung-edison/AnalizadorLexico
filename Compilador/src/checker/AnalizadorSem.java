@@ -12,6 +12,8 @@ import parser.Nodo;
 
 public class AnalizadorSem {
 	
+	ArrayList<String[]> simbolos;
+	
 	public AnalizadorSem() {
 		super();
 		
@@ -28,7 +30,7 @@ public class AnalizadorSem {
 				simb += input.readLine() + "|";
 			}
 			String[] aux = simb.split("\\|");
-			ArrayList<String[]> simbolos = new ArrayList<String[]>();
+			simbolos = new ArrayList<String[]>();
 			for(String s:aux){
 				simbolos.add(s.split(","));
 			}
@@ -44,11 +46,17 @@ public class AnalizadorSem {
 			}
 		}
 	}
+	
+	public String verificar(String var){
+		for(String[] n:simbolos){
+			if(var.equals(n[0])) return n[1];
+		}
+		return null;
+	}
 
 	public void typeCheck(ArrayList<Nodo> arboles) {
 	
 		//por hacer: busqueda en profundidad de expresiones logicas y aritmeticas en cada arbol
-		//revisar y comparar variables con la tabla de simbolos
 		//cambiar el agregado de variables del parser al checker
 		//eliminar variables locales de la lista de simbolos una vez terminado el bloque
 		//retorno de errores
