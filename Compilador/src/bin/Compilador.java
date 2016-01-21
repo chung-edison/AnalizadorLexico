@@ -13,7 +13,7 @@ public class Compilador {
 		
 		lexer.lex();
 		parser.parse();		
-		typecheck.typeCheck(parser.getArboles());		
+		typecheck.analizar(parser.getArboles());		
 		
 		System.out.println("Compilación completa");
 

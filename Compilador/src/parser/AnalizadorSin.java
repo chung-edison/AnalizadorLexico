@@ -44,11 +44,11 @@ public class AnalizadorSin {
 					linea++;
 				}
 				
-				Nodo sig = new Nodo(tokens[0].substring(1), tokens[1]);
+				Nodo sig = new Nodo(tokens[0].substring(1), tokens[1], linea);
 				arbol = parser.shift(sig);
 				
 				if(arbol.getInfo() != null){
-					if(arbol.getInfo().equals("#VARGLOBAL")){
+					if(arbol.getInfo().matches("#VARLOCAL|#VARGLOBAL")){
 						Nodo aux = arbol.getHijos().get(2);
 						output.write(aux.getDato() + ",");
 						aux = arbol.getHijos().get(0);
@@ -56,7 +56,7 @@ public class AnalizadorSin {
 						output.newLine();
 					}
 					
-					if(arbol.getInfo().matches("#VARLOCAL|#VARGLOBAL|#COM|#BLOQ|#FUNC")){
+					if(arbol.getInfo().matches("#COM|#BLOQ|#FUNC")){
 						arboles.add(arbol);
 					}
 					

@@ -50,7 +50,7 @@ public class Parser {
 	public Nodo shift(Nodo nuevo){
 
 		if(nuevo.getInfo().matches("EOL"))
-			return new Nodo(null,null);
+			return new Nodo(null,null,0);
 		
 		if(nuevo.getInfo().matches("errorlex")){
 			nuevo.setInfo("error");
@@ -58,11 +58,11 @@ public class Parser {
 			return nuevo;
 		}
 		
-		if(panico) return new Nodo(null,null);
+		if(panico) return new Nodo(null,null,0);
 			
 		if(panico && nuevo.getInfo().matches(";|ld")){
 			panico = false;
-			return new Nodo(null, null);
+			return new Nodo(null, null,0);
 		}
 		
 		
@@ -99,10 +99,10 @@ public class Parser {
 			stack.clear();
 			stack.add(new ArrayList<Nodo>());
 			stackpos = 0;
-			return new Nodo(nuevo.getDato(), "error");
+			return new Nodo(nuevo.getDato(), "error", nuevo.getLinea());
 		}
 		if(((nuevo.getInfo().matches(";|ld") && cola.size() > 2)||(nuevo.getInfo().matches("EOF") && cola.size() > 3))&&exp.getInfo()==null){
-			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error");
+			exp = new Nodo(cola.get(cola.size() - 2).getDato(), "error",cola.get(cola.size() - 2).getLinea());
 			cola.clear();
 		}
 		return exp;
@@ -121,10 +121,10 @@ public class Parser {
 		
 		expresion = check(acomparar + " " + cola.get(i).getInfo());
 		
-		if(expresion == "sub") return new Nodo(null,null);
+		if(expresion == "sub") return new Nodo(null,null,0);
 		
 		if(expresion.matches("#.*")) {
-			Nodo padre = new Nodo(null, expresion);	
+			Nodo padre = new Nodo(null, expresion, cola.get(i).getLinea());	
 			return padre;
 		}
 		
@@ -138,7 +138,7 @@ public class Parser {
 			return shift(cola.remove(cola.size() - 1));		
 		}
 		
-		return new Nodo(null,null);
+		return new Nodo(null,null,0);
 	}
 	
 	public String check(String toReduce){
