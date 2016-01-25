@@ -71,6 +71,7 @@ public class Parser {
 		
 		Nodo exp = reduce(cola);
 		if(exp.getInfo() != null) {
+			//System.out.println(exp.mostrar());
 			for(Nodo nodo:cola){
 				nodo.setPadre(exp);
 				exp.addHijo(nodo);
@@ -121,7 +122,7 @@ public class Parser {
 		
 		expresion = check(acomparar + " " + cola.get(i).getInfo());
 		
-		if(expresion == "sub") return new Nodo(null,null,0);
+		if(expresion.matches("sub")) return new Nodo(null,null,0);
 		
 		if(expresion.matches("#.*")) {
 			Nodo padre = new Nodo(null, expresion, cola.get(i).getLinea());	

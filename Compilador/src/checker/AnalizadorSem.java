@@ -1,10 +1,8 @@
 package checker;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -69,9 +67,21 @@ public class AnalizadorSem {
 			simbolos.add(varlocal);
 			contador++;
 			return "";
-		} else if (arbol.getInfo().matches("ident")&&!arbol.getPadre().getInfo().matches("#COM")) {
-			String n = verificar(arbol.getDato());
-			if(n == null) System.out.println("Error linea " + arbol.getLinea() + ": " + arbol.getDato() + " no ha sido declarada.");
+		} else if (arbol.getInfo().matches("#IDENT")&&!arbol.getPadre().getInfo().matches("#IDENT")) {
+			String variable = arbol.getHijos().get(0).getDato();
+			boolean vector = false;
+			if(variable == null) {
+				variable = arbol.getHijos().get(0).getHijos().get(0).getDato();
+				vector = true;
+			}
+			String n = verificar(variable);
+			if(n == null) System.out.println("Error linea " + arbol.getLinea() + ": \"" + variable + "\" no ha sido declarada.");
+			else if(n.matches(".* vect")&&vector){
+				return n.split("\\s")[0];
+			}else if(n.matches(".* vect")^vector){
+				System.out.println("Error linea " + arbol.getLinea() + ": Uso erroneo de indexacion con \"" + variable + "\" (¿vector?).");
+				return null;
+			}
 			return n;
 		} else if (!arbol.getHijos().isEmpty()) {
 			for (Nodo hijo : arbol.getHijos())
@@ -81,27 +91,40 @@ public class AnalizadorSem {
 			salida = salida.trim();
 			String[] tipos = salida.split("\\s+");
 			String aux2 = inferir(tipos[0], tipos[1]);
-			if(aux2.matches("error")) System.out.println("Error linea " + arbol.getLinea() + ": No se puede comparar " + tipos[0] + " a " + tipos[1]);
+			if(aux2.matches("error")) System.out.println("Error linea " + arbol.getLinea() + ": No se puede comparar " + tipos[0] + " con " + tipos[1]);
 			salida = "";
 		}
 		
-		if (arbol.getInfo().matches("#COM")&&arbol.getHijos().get(0).getInfo().matches("ident")) {
+		if (arbol.getInfo().matches("#COM")&&arbol.getHijos().get(0).getInfo().matches("#IDENT")) {
 			//System.out.println(salida);
-			String asigna = verificar(arbol.getHijos().get(0).getDato());
-			if(asigna!=null){			
-				salida = salida.trim();
-				String[] tipos = salida.split("\\s+");
-				String aux = tipos[tipos.length - 1];
-				for(int i = tipos.length - 2; i >= 0; i--){
-					if(tipos[i].matches("string|char")||aux.matches("string|char")){
-						System.out.println("Error linea " + arbol.getLinea() + ": No se puede transformar " + tipos[i] + " - " + aux);
-						break;
-					}
-					aux = inferir(tipos[i], aux);
+			boolean b = false;
+			Nodo Naux = arbol.getHijos().get(0).getHijos().get(0);
+			if(Naux.getInfo().matches("#IDENT")) {
+				Naux = Naux.getHijos().get(0);
+			}
+			String asigna = verificar(Naux.getDato());
+			salida = salida.trim();
+			String[] tipos = salida.split("\\s+");
+			String aux = tipos[tipos.length - 1];
+			for (int i = tipos.length - 2; i > 0; i--) {
+				if (tipos[i].matches("string|char") || aux.matches("string|char")) {
+					System.out.println(
+							"Error linea " + arbol.getLinea() + ": No se puede transformar " + tipos[i] + " - " + aux);
+					b = true;
+					break;
 				}
+				aux = inferir(tipos[i], aux);
+			}
+			if (asigna != null) {
 				String aux2 = inferir(asigna, aux);
-				if(aux2.matches("error")) System.out.println("Error linea " + arbol.getLinea() + ": No se puede transformar " + aux + " a " + asigna + "(" + arbol.getHijos().get(0).getDato() + ")");
-			}			
+				if (aux2.matches("error"))
+					System.out.println("Error linea " + arbol.getLinea() + ": No se puede transformar " + aux + " a " + asigna + " (" + Naux.getDato() + ")");
+			} else if (b == false&&!aux.matches("null")) {
+				System.out.println("\tWarning linea " + arbol.getLinea() + ": \"" + Naux.getDato() + "\" sera tratada a partir de esta linea como " + aux);
+				String[] varlocal = { Naux.getDato(), aux };
+				simbolos.add(varlocal);
+				contador++;
+			}
 			salida = "";
 		}
 
@@ -123,7 +146,7 @@ public class AnalizadorSem {
 	public void analizar(ArrayList<Nodo> arboles) {
 		
 		for(Nodo arbol:arboles){
-			//System.out.println(arbol.terminales());
+			//System.out.println(arbol.mostrar());
 			System.out.println(typeCheck(arbol));
 		}
 	

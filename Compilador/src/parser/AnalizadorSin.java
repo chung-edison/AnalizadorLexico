@@ -48,11 +48,23 @@ public class AnalizadorSin {
 				arbol = parser.shift(sig);
 				
 				if(arbol.getInfo() != null){
+					//System.out.println(arbol.mostrar());
 					if(arbol.getInfo().matches("#VARLOCAL|#VARGLOBAL")){
-						Nodo aux = arbol.getHijos().get(2);
+						Nodo aux = arbol;
+						if(arbol.getInfo().matches("#VARGLOBAL")){
+							aux = arbol.getHijos().get(0);
+						}
+						aux = aux.getHijos().get(2);
 						output.write(aux.getDato() + ",");
-						aux = arbol.getHijos().get(0);
+						aux = arbol;
+						if(arbol.getInfo().matches("#VARGLOBAL")){
+							aux = arbol.getHijos().get(0);
+						}
+						aux = aux.getHijos().get(0);
 						output.write(aux.getDato());
+						if(arbol.getInfo().matches("#VARGLOBAL")){
+							output.write(" vect");
+						}
 						output.newLine();
 					}
 					
