@@ -1,19 +1,20 @@
 #VARLOCAL
  tipo : ident
 #VARGLOBAL
- #VARLOCAL #VECT
-#VECT
- ci int cd
+ #VARLOCAL ci int cd
+#IDENT
+ ident
+ #IDENT ci int cd
 #ARIT
  #VAR signo #VAR
  #VAR signo #ARIT
- #VAR signo ident
- ident signo ident
- ident signo #ARIT
- ident signo #VAR
+ #VAR signo #IDENT
+ #IDENT signo #IDENT
+ #IDENT signo #ARIT
+ #IDENT signo #VAR
  pi #ARIT pd
  pi #VAR signo #PDARIT
- pi ident signo #PDARIT
+ pi #IDENT signo #PDARIT
  pi #ARIT signo #PDARIT
  pi #PDARIT
 #PDARIT
@@ -22,19 +23,22 @@
 #LOGIC
  #VAR opcomp #VAR
  #VAR opcomp #ARIT
- #VAR opcomp ident
- ident opcomp ident
- ident opcomp #ARIT
- ident opcomp #VAR
+ #VAR opcomp #IDENT
+ #IDENT opcomp #IDENT
+ #IDENT opcomp #ARIT
+ #IDENT opcomp #VAR
  #ARIT opcomp #VAR
  #ARIT opcomp #ARIT
- #ARIT opcomp ident
+ #ARIT opcomp #IDENT
 #VAR
  int
  float
  pi #VAR pd
 #COM
- ident #EXPR
+ #IDENT = #VAR
+ #IDENT = #IDENT
+ #IDENT = #ARIT
+ #IDENT = #LOGIC
  input
  output
  return
@@ -46,18 +50,6 @@
 #LICOM
  li #COM ;
  #LICOM #COM ;
-#EXPR
- = #VAR
- = ident
- = #ARIT
- = #LOGIC
- #VECT = #VAR
- #VECT = ident
- #VECT = #ARIT
- #VECT = #LOGIC
- #EXPR signo #VAR
- #EXPR signo ident
- #EXPR signo #ARIT
 #IF
  if pi #LOGIC pd then #COM
  #IF else #COM

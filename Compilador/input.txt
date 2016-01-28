@@ -1,5 +1,7 @@
+int : varsi;
+char :super[4];
 int : funcion(bool : asd)
 {int : a; int:b;}
-{asdf= asdf ; super = a * 98;
-asdf= asdf ; super = a * 98;
-if(a == b) then a = b;}
+{asdf= a ; super = b * 98;
+asdf= super[2] ; super[3] = b[5] * 98.98;
+if(a == asdf) then a = b;}
