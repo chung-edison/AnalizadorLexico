@@ -1,5 +1,9 @@
-int : funcion(bool : asd)
-{int : a; int:b;}
-{asdf= asdf ; super = a * 98;
-asdf= asdf ; super = a * 98;
-if(a == b) then a = b;}
+int : varsi;
+char :super[4];
+int : funcion(bool : asd,int : x,bool:y)
+{int : a; string:b;}
+{asdf= asd ; super = b * 98;
+asdf= super[2] ; super[3] = b[5] * 98.98;
+b = funcion(asd,5,true);
+a = 98.8;
+if(a == asdf) then a = b;}
