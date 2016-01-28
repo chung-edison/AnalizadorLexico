@@ -12,6 +12,7 @@
 #PARIN
  #PARINCOMA #IDENT pd
  #PARINCOMA #VAR pd
+ #PARINCOMA #PARIN
 #PARINCOMA
  #IDENT ,
  #VAR ,
@@ -44,6 +45,7 @@
 #VAR
  int
  float
+ bool
  pi #VAR pd
 #COM
  #IDENT = #VAR

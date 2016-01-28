@@ -1,8 +1,10 @@
 package checker;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -72,10 +74,11 @@ public class AnalizadorSem {
 				varlocal = new String[] { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato(),
 						aux.getHijos().get(0).getHijos().get(2).getDato() };
 			} else {
-				varlocal = new String[] { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato() };
+				varlocal = new String[] { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato()};
 			}
 			simbolos.add(varlocal);
-			contador++;
+			if(arbol.getPadre().getInfo().matches("#LIVAR"))
+				contador++;
 			return "";
 		} else if (arbol.getInfo().matches("#IDENT")&&!arbol.getPadre().getInfo().matches("#IDENT")) {
 			String variable = arbol.getHijos().get(0).getDato();
@@ -92,7 +95,7 @@ public class AnalizadorSem {
 			if(n == null) System.out.println("Error linea " + arbol.getLinea() + ": \"" + variable + "\" no ha sido declarada.");
 			else if(funcion){
 				if(!verificarParam(arbol)){
-					System.out.println("Error linea " + arbol.getLinea() + ": Tipos de parámetros no coinciden para la función \"" + variable + "\".");
+					System.out.println("Error linea " + arbol.getLinea() + ": Tipos o cantidad de parámetros no coinciden para la función \"" + variable + "\".");
 				}
 			} else if (n.matches(".* vect") && vector) {
 				return n.split("\\s")[0];
@@ -121,6 +124,9 @@ public class AnalizadorSem {
 				Naux = Naux.getHijos().get(0);
 			}
 			String asigna = verificar(Naux.getDato());
+			if(asigna!=null&&asigna.matches(".*vect")){
+				asigna = asigna.split("\\s+")[0];
+			}
 			salida = salida.trim();
 			String[] tipos = salida.split("\\s+");
 			String aux = tipos[tipos.length - 1];
@@ -134,11 +140,13 @@ public class AnalizadorSem {
 				aux = inferir(tipos[i], aux);
 			}
 			if (asigna != null) {
-				String aux2 = inferir(asigna, aux);
+				String aux2 = inducir(asigna, aux);
 				if (aux2.matches("error"))
 					System.out.println("Error linea " + arbol.getLinea() + ": No se puede transformar " + aux + " a " + asigna + " (" + Naux.getDato() + ")");
+				else if (aux2.matches("warning"))
+					System.out.println("Warning linea " + arbol.getLinea() + ": Se perderá precisión al transformar " + aux + " a " + asigna + " (" + Naux.getDato() + ")");
 			} else if (b == false&&!aux.matches("null")&&asigna==null) {
-				System.out.println("\tWarning linea " + arbol.getLinea() + ": \"" + Naux.getDato() + "\" sera tratada a partir de esta linea como " + aux);
+				System.out.println("Warning linea " + arbol.getLinea() + ": \"" + Naux.getDato() + "\" sera tratada a partir de esta linea como " + aux);
 				String[] varlocal = { Naux.getDato(), aux };
 				simbolos.add(varlocal);
 				contador++;
@@ -153,6 +161,7 @@ public class AnalizadorSem {
 		return salida;
 	}
 	
+	//compara los tipos respectivos
 	public String inferir(String t1, String t2){
 		if(t1.equals(t2)) return t1;
 		else if(t1.matches("string|char")||t2.matches("string|char")) return "error";
@@ -160,22 +169,43 @@ public class AnalizadorSem {
 		else if(t1.matches("int")||t2.matches("int")) return "int";
 		return "bool";
 	}
+	
+	public String inducir(String aInducir, String aAsignar){
+		if(aInducir.equals(aAsignar)) return aInducir;
+		else if(aInducir.matches("string|char")||aAsignar.matches("string|char")) return "error";
+		else if(aInducir.matches("int|bool")||aAsignar.matches("float")) {
+			return "warning";
+		}
+		else if(aInducir.matches("float|int")||aAsignar.matches("bool")) return aInducir;
+		else if(aInducir.matches("float|bool")||aAsignar.matches("int")) return aInducir;
+		return "bool";
+	}
 
+	//ingresa el arbol de una llamada a una funcion para realizar la verificacion de los parametros en la llamada
 	public boolean verificarParam(Nodo funcion){
 		String verificar = funcion.getHijos().get(0).getHijos().get(0).getDato();
 		int i = 0;
 		while(!verificar.matches(simbolos.get(i)[0])){
 			i++;
 		}
-		String[] params = expandir(funcion.getHijos().get(2)).split("\\s,\\s|\\spd");
-		for(int j = 0; j < params.length - 1; j++){
-			i++;
-			if(!params[j].matches(simbolos.get(i)[1]))
+		ArrayList<String[]> params = new ArrayList<String[]>();
+		for(String[] s : simbolos){
+			if(s.length == 3){
+				if(s[2].matches(verificar))
+					params.add(s);
+			}
+		}
+		
+		String[] args = expandir(funcion.getHijos().get(2)).split("\\s+,\\s+|\\s+pd");
+		if(args.length - 1 != params.size()) return false;
+		for(int j = 0; j < args.length - 1; j++){
+			if(!args[j].matches(params.get(j)[1]))
 				return false;			
 		}
 		return true;
 	}
 	
+	//transforma el árbol a un string con los tipos definidos de los nodos terminales
 	public String expandir(Nodo nodo){
 		String expand = "";
 		if(nodo.getHijos().isEmpty()) {
@@ -196,10 +226,27 @@ public class AnalizadorSem {
 			//System.out.println(arbol.mostrar());
 			System.out.println(typeCheck(arbol));
 		}
-	
 		
-		//por hacer: verificar llamadas de funciones y sus argumentos
-		//			 verificar vectores globales
+		//guardar las funciones con sus respectivos parámetros
+		BufferedWriter output = null;	
+		
+		try {			
+			File outputFile = new File("declaraciones.csv");
+			output = new BufferedWriter(new FileWriter(outputFile));
+			for(String[] s:simbolos){
+				output.write(s[0] + "," + s[1]);
+				output.newLine();
+			}						
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (output != null)
+					output.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 }
