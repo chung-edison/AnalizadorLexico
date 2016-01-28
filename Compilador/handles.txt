@@ -4,7 +4,18 @@
  #VARLOCAL ci int cd
 #IDENT
  ident
+ #IDENT pi pd
+ #IDENT pi #IDENT pd
+ #IDENT pi #VAR pd
+ #IDENT pi #PARIN
  #IDENT ci int cd
+#PARIN
+ #PARINCOMA #IDENT pd
+ #PARINCOMA #VAR pd
+#PARINCOMA
+ #IDENT ,
+ #VAR ,
+ #PARINCOMA #PARINCOMA
 #ARIT
  #VAR signo #VAR
  #VAR signo #ARIT

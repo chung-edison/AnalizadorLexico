@@ -63,24 +63,42 @@ public class AnalizadorSem {
 			if(tipo.matches("pi")) tipo = arbol.getHijos().get(1).getInfo();
 			return tipo;
 		} else if (arbol.getInfo().matches("#VARLOCAL")) {
-			String[] varlocal = { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato() };
+			String[] varlocal;
+			if (arbol.getPadre().getInfo().matches("#PARAM|#PARAMCOMA")) {
+				Nodo aux = arbol;
+				while (!aux.getInfo().matches("#FUNC")) {
+					aux = aux.getPadre();
+				}
+				varlocal = new String[] { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato(),
+						aux.getHijos().get(0).getHijos().get(2).getDato() };
+			} else {
+				varlocal = new String[] { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato() };
+			}
 			simbolos.add(varlocal);
 			contador++;
 			return "";
 		} else if (arbol.getInfo().matches("#IDENT")&&!arbol.getPadre().getInfo().matches("#IDENT")) {
 			String variable = arbol.getHijos().get(0).getDato();
 			boolean vector = false;
+			boolean funcion = false;
 			if(variable == null) {
 				variable = arbol.getHijos().get(0).getHijos().get(0).getDato();
-				vector = true;
+				if (arbol.getHijos().get(1).getInfo().matches("ci"))
+					vector = true;
+				else if (arbol.getHijos().get(1).getInfo().matches("pi"))
+					funcion = true;
 			}
 			String n = verificar(variable);
 			if(n == null) System.out.println("Error linea " + arbol.getLinea() + ": \"" + variable + "\" no ha sido declarada.");
-			else if(n.matches(".* vect")&&vector){
+			else if(funcion){
+				if(!verificarParam(arbol)){
+					System.out.println("Error linea " + arbol.getLinea() + ": Tipos de parámetros no coinciden para la función \"" + variable + "\".");
+				}
+			} else if (n.matches(".* vect") && vector) {
 				return n.split("\\s")[0];
-			}else if(n.matches(".* vect")^vector){
+			} else if(n.matches(".* vect")^vector){
 				System.out.println("Error linea " + arbol.getLinea() + ": Uso erroneo de indexacion con \"" + variable + "\" (¿vector?).");
-				return null;
+				return "error";
 			}
 			return n;
 		} else if (!arbol.getHijos().isEmpty()) {
@@ -119,7 +137,7 @@ public class AnalizadorSem {
 				String aux2 = inferir(asigna, aux);
 				if (aux2.matches("error"))
 					System.out.println("Error linea " + arbol.getLinea() + ": No se puede transformar " + aux + " a " + asigna + " (" + Naux.getDato() + ")");
-			} else if (b == false&&!aux.matches("null")) {
+			} else if (b == false&&!aux.matches("null")&&asigna==null) {
 				System.out.println("\tWarning linea " + arbol.getLinea() + ": \"" + Naux.getDato() + "\" sera tratada a partir de esta linea como " + aux);
 				String[] varlocal = { Naux.getDato(), aux };
 				simbolos.add(varlocal);
@@ -141,6 +159,35 @@ public class AnalizadorSem {
 		else if(t1.matches("float")||t2.matches("float")) return "float";
 		else if(t1.matches("int")||t2.matches("int")) return "int";
 		return "bool";
+	}
+
+	public boolean verificarParam(Nodo funcion){
+		String verificar = funcion.getHijos().get(0).getHijos().get(0).getDato();
+		int i = 0;
+		while(!verificar.matches(simbolos.get(i)[0])){
+			i++;
+		}
+		String[] params = expandir(funcion.getHijos().get(2)).split("\\s,\\s|\\spd");
+		for(int j = 0; j < params.length - 1; j++){
+			i++;
+			if(!params[j].matches(simbolos.get(i)[1]))
+				return false;			
+		}
+		return true;
+	}
+	
+	public String expandir(Nodo nodo){
+		String expand = "";
+		if(nodo.getHijos().isEmpty()) {
+			if(nodo.getInfo().matches("ident")){
+				return verificar(nodo.getDato());
+			}
+			return nodo.getInfo();
+		}
+		for(Nodo n:nodo.getHijos()){
+			expand += expandir(n) + " ";
+		}
+		return expand;
 	}
 
 	public void analizar(ArrayList<Nodo> arboles) {

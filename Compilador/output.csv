@@ -25,7 +25,7 @@
 ":",:
 "a",ident
 ";",;
-"int",tipo
+"string",tipo
 ":",:
 "b",ident
 ";",;
@@ -34,7 +34,7 @@
 "{",li
 "asdf",ident
 "=",=
-"a",ident
+"asd",ident
 ";",;
 "super",ident
 "=",=
@@ -61,6 +61,16 @@
 "]",cd
 "*",signo
 "98.98",float
+";",;
+"EOL",EOL
+"b",ident
+"=",=
+"funcion",ident
+"(",pi
+"asd",ident
+",",,
+"5",int
+")",pd
 ";",;
 "EOL",EOL
 "if",if
