@@ -3,6 +3,11 @@
 "varsi",ident
 ";",;
 "EOL",EOL
+"int",tipo
+":",:
+"varsi",ident
+";",;
+"EOL",EOL
 "char",tipo
 ":",:
 "super",ident

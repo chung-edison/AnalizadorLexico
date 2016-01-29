@@ -1,9 +1,7 @@
 package checker;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,38 +15,11 @@ public class AnalizadorSem {
 	
 	public AnalizadorSem() {
 		super();
-		
-		BufferedReader input = null;
-
-		try {
-
-			File inputFile = new File("simbolos.csv");
-
-			input = new BufferedReader(new FileReader(inputFile));
-
-			String simb = "";
-			while (input.ready()) {
-				simb += input.readLine() + "|";
-			}
-			String[] aux = simb.split("\\|");
-			simbolos = new ArrayList<String[]>();
-			for(String s:aux){
-				simbolos.add(s.split(","));
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (input != null)
-					input.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
+		simbolos = new ArrayList<String[]>();
 	}
 	
 	public String verificar(String var){
+		if(simbolos.isEmpty()) return null;
 		for(String[] simb: simbolos){
 			if(var.equals(simb[0])) return simb[1];
 		}
@@ -66,7 +37,7 @@ public class AnalizadorSem {
 			return tipo;
 		} else if (arbol.getInfo().matches("#VARLOCAL")) {
 			String[] varlocal;
-			if (arbol.getPadre().getInfo().matches("#PARAM|#PARAMCOMA")) {
+			if (arbol.getPadre()!=null&&arbol.getPadre().getInfo().matches("#PARAM|#PARAMCOMA")) {
 				Nodo aux = arbol;
 				while (!aux.getInfo().matches("#FUNC")) {
 					aux = aux.getPadre();
@@ -76,9 +47,14 @@ public class AnalizadorSem {
 			} else {
 				varlocal = new String[] { arbol.getHijos().get(2).getDato(), arbol.getHijos().get(0).getDato()};
 			}
-			simbolos.add(varlocal);
-			if(arbol.getPadre().getInfo().matches("#LIVAR"))
-				contador++;
+			if(arbol.getPadre()!=null&&arbol.getPadre().getInfo().matches("#VARGLOBAL")){
+				varlocal[1] += " vect";
+			}
+			if(verificar(varlocal[0])==null){
+				simbolos.add(varlocal);
+				if (arbol.getPadre()!=null&&arbol.getPadre().getInfo().matches("#LIVAR"))
+					contador++;
+			}else System.out.println("Error linea " + arbol.getLinea() + ": Doble declaración de \"" + varlocal[0] + "\"");
 			return "";
 		} else if (arbol.getInfo().matches("#IDENT")&&!arbol.getPadre().getInfo().matches("#IDENT")) {
 			String variable = arbol.getHijos().get(0).getDato();
@@ -184,10 +160,6 @@ public class AnalizadorSem {
 	//ingresa el arbol de una llamada a una funcion para realizar la verificacion de los parametros en la llamada
 	public boolean verificarParam(Nodo funcion){
 		String verificar = funcion.getHijos().get(0).getHijos().get(0).getDato();
-		int i = 0;
-		while(!verificar.matches(simbolos.get(i)[0])){
-			i++;
-		}
 		ArrayList<String[]> params = new ArrayList<String[]>();
 		for(String[] s : simbolos){
 			if(s.length == 3){
@@ -203,6 +175,14 @@ public class AnalizadorSem {
 				return false;			
 		}
 		return true;
+	}
+	
+	public int buscarFunc(String funcion){
+		int i = 0;
+		while(!funcion.matches(simbolos.get(i)[0])){
+			i++;
+		}
+		return i;
 	}
 	
 	//transforma el árbol a un string con los tipos definidos de los nodos terminales
@@ -224,14 +204,14 @@ public class AnalizadorSem {
 		
 		for(Nodo arbol:arboles){
 			//System.out.println(arbol.mostrar());
-			System.out.println(typeCheck(arbol));
+			typeCheck(arbol);
 		}
 		
 		//guardar las funciones con sus respectivos parámetros
 		BufferedWriter output = null;	
 		
 		try {			
-			File outputFile = new File("declaraciones.csv");
+			File outputFile = new File("simbolos.csv");
 			output = new BufferedWriter(new FileWriter(outputFile));
 			for(String[] s:simbolos){
 				output.write(s[0] + "," + s[1]);

@@ -1,4 +1,5 @@
 int : varsi;
+int :varsi;
 char :super[4];
 int : funcion(bool : asd,int : x,bool:y)
 {int : a; string:b;}
