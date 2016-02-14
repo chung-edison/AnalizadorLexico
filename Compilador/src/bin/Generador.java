@@ -1,5 +1,11 @@
 package bin;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -12,6 +18,7 @@ public class Generador {
 	private int l;
 	
 	public Generador(){
+		super();
 		vars = new ArrayList<String[]>();
 		i = 1;
 		l = 1;
@@ -19,12 +26,31 @@ public class Generador {
 	
 	//generador de código ensamblador
 	public void generar(ArrayList<Nodo> arboles){
+		String salida = "";
 		for(Nodo arbol:arboles){
 			if(arbol.getInfo().matches("#VARLOCAL")){
 				registrar(arbol);
 			}
-			System.out.println(traducir(arbol));
+			salida += traducir(arbol);
 			//System.out.println(expandir(arbol));
+		}
+		
+		//guardar el código generado en un archivo.asm
+		BufferedWriter output = null;	
+		
+		try {			
+			File outputFile = new File("assembly.asm");
+			output = new BufferedWriter(new FileWriter(outputFile));
+			output.write(salida);		
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (output != null)
+					output.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	
