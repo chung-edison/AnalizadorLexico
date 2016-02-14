@@ -45,8 +45,7 @@ public class AnalizadorSin {
 
 					if(arbol.getInfo().matches("#VARLOCAL|#VARGLOBAL|#COM|#BLOQ|#FUNC")){
 						arboles.add(arbol);
-					}
-					
+					}else 
 					if(arbol.getInfo().equals("error")){
 						System.out.println("Error en linea " + linea + " cerca de: " + arbol.getDato());
 					}

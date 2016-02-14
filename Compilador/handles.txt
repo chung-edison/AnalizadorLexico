@@ -46,7 +46,14 @@
  int
  float
  bool
+ string
+ char
  pi #VAR pd
+#IF
+ if pi #LOGIC pd then #COM
+ if pi #LOGIC pd then #BLOQ
+ #IF else #COM
+ #IF else #BLOQ
 #COM
  #IDENT = #VAR
  #IDENT = #IDENT
@@ -55,19 +62,17 @@
  input
  output
  return
- #IF
- #WHILE
  #DO
 #BLOQ
  #LICOM ld
 #LICOM
  li #COM ;
+ li #IF
+ li #WHILE
+ li #DO
  #LICOM #COM ;
-#IF
- if pi #LOGIC pd then #COM
- #IF else #COM
- if pi #LOGIC pd then #BLOQ
- #IF else #BLOQ
+ #LICOM #IF
+ #LICOM #WHILE
 #WHILE
  while pi #LOGIC pd do #BLOQ
  while pi #LOGIC pd do #COM
@@ -75,6 +80,7 @@
  do #BLOQ while pi #LOGIC pd
 #FUNC
  #VARLOCAL pi #PARAM #LOCAL #BLOQ
+ #VARLOCAL pi pd #LOCAL #BLOQ
 #PARAM
  #VARLOCAL pd
  #PARAMCOMA #PARAM

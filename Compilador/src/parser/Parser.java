@@ -58,13 +58,12 @@ public class Parser {
 			return nuevo;
 		}
 		
-		if(panico) return new Nodo(null,null,0);
-			
 		if(panico && nuevo.getInfo().matches(";|ld")){
 			panico = false;
 			return new Nodo(null, null,0);
 		}
 		
+		if(panico) return new Nodo(null,null,0);		
 		
 		ArrayList<Nodo> cola = stack.get(stackpos);
 		cola.add(nuevo);
@@ -78,7 +77,14 @@ public class Parser {
 			}
 			stack.get(stackpos).clear();
 			if(exp.getInfo().matches("#LICOM|#LIVAR"))
-				nuevo.setInfo("");
+				if(!nuevo.getInfo().matches("#IF|#WHILE|#DO"))
+					nuevo.setInfo("");
+			if(exp.getInfo()!=null&&exp.getInfo().matches("#FUNC")){
+				stack.clear();
+				stack.add(new ArrayList<Nodo>());
+				stackpos = 0;
+				return exp;
+			}
 			exp = shift(exp);
 		}
 		try{

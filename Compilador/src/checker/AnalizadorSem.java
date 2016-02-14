@@ -54,7 +54,7 @@ public class AnalizadorSem {
 				simbolos.add(varlocal);
 				if (arbol.getPadre()!=null&&arbol.getPadre().getInfo().matches("#LIVAR"))
 					contador++;
-			}else System.out.println("Error linea " + arbol.getLinea() + ": Doble declaración de \"" + varlocal[0] + "\"");
+			}else System.out.println("Error linea " + arbol.getLinea() + ": Doble declaración de \"" + varlocal[0] + "\". Se usará la primera.");
 			return "";
 		} else if (arbol.getInfo().matches("#IDENT")&&!arbol.getPadre().getInfo().matches("#IDENT")) {
 			String variable = arbol.getHijos().get(0).getDato();
@@ -148,7 +148,7 @@ public class AnalizadorSem {
 	
 	public String inducir(String aInducir, String aAsignar){
 		if(aInducir.equals(aAsignar)) return aInducir;
-		else if(aInducir.matches("string|char")||aAsignar.matches("string|char")) return "error";
+		else if(aInducir.matches("string|char|null")||aAsignar.matches("string|char|null")) return "error";
 		else if(aInducir.matches("int|bool")||aAsignar.matches("float")) {
 			return "warning";
 		}
