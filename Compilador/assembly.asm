@@ -1,3 +1,9 @@
+addI fp, 104 => tp
+addI fp, 312 => hp
+addI tp, 0 => r1
+main_entry:
+subI hp, 2 => r2
+subI hp, 3 => r3
 load 23 => a0
 store a0 => r2
 l1:
