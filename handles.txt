@@ -1,0 +1,94 @@
+#VARLOCAL
+ tipo : ident
+#VARGLOBAL
+ #VARLOCAL ci int cd
+#IDENT
+ ident
+ #IDENT pi pd
+ #IDENT pi #IDENT pd
+ #IDENT pi #VAR pd
+ #IDENT pi #PARIN
+ #IDENT ci int cd
+#PARIN
+ #PARINCOMA #IDENT pd
+ #PARINCOMA #VAR pd
+ #PARINCOMA #PARIN
+#PARINCOMA
+ #IDENT ,
+ #VAR ,
+ #PARINCOMA #PARINCOMA
+#ARIT
+ #VAR signo #VAR
+ #VAR signo #ARIT
+ #VAR signo #IDENT
+ #IDENT signo #IDENT
+ #IDENT signo #ARIT
+ #IDENT signo #VAR
+ pi #ARIT pd
+ pi #VAR signo #PDARIT
+ pi #IDENT signo #PDARIT
+ pi #ARIT signo #PDARIT
+ pi #PDARIT
+#PDARIT
+ #VAR pd signo #VAR
+ #ARIT pd signo #ARIT
+#LOGIC
+ #VAR opcomp #VAR
+ #VAR opcomp #ARIT
+ #VAR opcomp #IDENT
+ #IDENT opcomp #IDENT
+ #IDENT opcomp #ARIT
+ #IDENT opcomp #VAR
+ #ARIT opcomp #VAR
+ #ARIT opcomp #ARIT
+ #ARIT opcomp #IDENT
+#VAR
+ int
+ float
+ bool
+ string
+ char
+ pi #VAR pd
+#IF
+ if pi #LOGIC pd then #COM
+ if pi #LOGIC pd then #BLOQ
+ #IF else #COM
+ #IF else #BLOQ
+#COM
+ #IDENT = #VAR
+ #IDENT = #IDENT
+ #IDENT = #ARIT
+ #IDENT = #LOGIC
+ input
+ output
+ return
+ #DO
+#BLOQ
+ #LICOM ld
+#LICOM
+ li #COM ;
+ li #IF
+ li #WHILE
+ li #DO
+ #LICOM #COM ;
+ #LICOM #IF
+ #LICOM #WHILE
+#WHILE
+ while pi #LOGIC pd do #BLOQ
+ while pi #LOGIC pd do #COM
+#DO
+ do #BLOQ while pi #LOGIC pd
+#FUNC
+ #VARLOCAL pi #PARAM #LOCAL #BLOQ
+ #VARLOCAL pi pd #LOCAL #BLOQ
+#PARAM
+ #VARLOCAL pd
+ #PARAMCOMA #PARAM
+#PARAMCOMA
+ #VARLOCAL ,
+ #PARAMCOMA #PARAMCOMA
+#LOCAL
+ #LIVAR ld
+#LIVAR
+ li #VARLOCAL ;
+ #LIVAR #VARLOCAL ;
