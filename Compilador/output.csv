@@ -1,6 +1,9 @@
 "float",tipo
 ":",:
 "c",ident
+"[",ci
+"3",int
+"]",cd
 ";",;
 "EOL",EOL
 "int",tipo
@@ -34,6 +37,9 @@
 "a",ident
 "==",opcomp
 "c",ident
+"[",ci
+"1",int
+"]",cd
 ";",;
 "}",ld
 "EOL",EOL
@@ -50,6 +56,9 @@
 "b",ident
 "-",signo
 "c",ident
+"[",ci
+"2",int
+"]",cd
 ";",;
 "}",ld
 "EOL",EOL

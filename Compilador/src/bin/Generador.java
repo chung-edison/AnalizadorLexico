@@ -80,9 +80,6 @@ public class Generador {
 	
 	//aumento un registro correspondiente a un vector global
 	public String registrarVect(Nodo arbol) {
-		String[] a = { arbol.getHijos().get(0).getHijos().get(2).getDato(), "r" + i };
-		vars.add(a);
-		i++;
 		String tipo = arbol.getHijos().get(0).getHijos().get(2).getInfo();
 		int t = 0;
 		if (tipo.matches("int")) {
@@ -94,11 +91,20 @@ public class Generador {
 		} else if (tipo.matches("char")) {
 			t = 1;
 		}
+		String[] a = { arbol.getHijos().get(0).getHijos().get(2).getDato(), "r" + i, "" + t };
+		vars.add(a);
+		i++;
 		t *= Integer.parseInt(arbol.getHijos().get(2).getDato());
 		tipo = "addI tp, " + st + " => " + a[1] + "\r\n";
 		st += t;
 		return tipo;
-
+	}
+	
+	public int offset(String var, int pos){
+		for(String[] v:vars){
+			if(var.matches(v[0])) pos *= Integer.parseInt(v[2]);
+		}
+		return pos;
 	}
 	
 	//aumenta un registro correspondiente a la variable a la lista
@@ -215,6 +221,8 @@ public class Generador {
 		for(Nodo n:nodo.getHijos()){
 			expand += expandir(n) + " ";
 		}
+		expand = expand.replaceAll("\\s+\\[\\s+", "[");
+		expand = expand.replaceAll("\\s+\\]", "]");
 		return expand;
 	}
 	
@@ -228,6 +236,8 @@ public class Generador {
 				try {
 					if (s.matches("r.")){
 						result += "load " + s + " => a0\r\n"; // acc <- x
+					} else if (s.matches("r.*")){
+						result += "loadAI " + s.substring(0, 2) + ", " + offset(s.substring(0, 2), Integer.parseInt(s.substring(3, s.length() - 1))) + " => a0\r\n"; // acc <- x
 					}
 					else {
 						Integer.parseInt(s);
@@ -274,15 +284,21 @@ public class Generador {
 	public String logic(String cod) {
 		String result = "";
 		String[] a = cod.split("\\s+");
-		if (a[0].matches("r.")) {
-			result += "load " + a[0] + " => t1\r\n";
+		String s = a[0];
+		if (s.matches("r.")) {
+			result += "load " + s + " => t1\r\n";
+		} else if (s.matches("r.*")){
+			result += "loadAI " + s.substring(0, 2) + ", " + offset(s.substring(0, 2), Integer.parseInt(s.substring(3, s.length() - 1))) + " => a0\r\n"; // acc <- x
 		} else {
-			result += "loadI " + a[0] + " => t1\r\n";
+			result += "loadI " + s + " => t1\r\n";
 		}
-		if (a[2].matches("r.")) {
-			result += "load " + a[2] + " => t2\r\n";
+		s = a[2];
+		if (s.matches("r.")) {
+			result += "load " + s + " => t2\r\n";
+		} else if (s.matches("r.*")){
+			result += "loadAI " + s.substring(0, 2) + ", " + offset(s.substring(0, 2), Integer.parseInt(s.substring(3, s.length() - 1))) + " => a0\r\n"; // acc <- x
 		} else {
-			result += "loadI " + a[2] + " => t2\r\n";
+			result += "loadI " + s + " => t2\r\n";
 		}
 		
 		if(a[1].matches("<")){

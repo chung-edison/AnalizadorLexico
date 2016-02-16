@@ -1,8 +1,8 @@
-float :c;
+float :c[3];
 int : main()
 {int : a; bool:b;}
 {a = 23;
 do
-{b = a == c;}
+{b = a == c[1];}
 while(a < 50);
-a = b - c;}
+a = b - c[2];}
